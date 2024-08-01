@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/078e2f97cb.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <style>
+        .dropdown-content {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+    <!-- NAV BAR -->
+    <header class="bg-gray-900 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="./budget.html">
+                <h1 class="text-2xl font-bold">Coinguard</h1>
+            </a>
+            <div id="navbar"></div>
+        </div>
+    </header>
+
+    <div class="container mx-auto mt-12 bg-white p-5 rounded-md">
+        <h2 class="text-4xl font-semibold mb-4">My Transactions</h2>
+        <div class="flex justify-between items-center mb-4">
+            <!-- <div class="flex space-x-2">
+                <button id = "sortDate" onclick = "sortDate()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Sort by Date</button>
+                <button id = "sortCategory" onclick = "sortCategory()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Sort by Category</button>
+            </div> -->
+            <div class="relative z-40">
+                <button id="filterCategory"
+                    class=" bg-opacity-90 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:bg-blue-600">
+                    Filter by Category
+                </button>
+                <!-- <input type="text" id="startDate" placeholder="Start Date" class="border px-4 py-2 rounded">
+                <input type="text" id="endDate" placeholder="End Date" class="border px-4 py-2 rounded">
+                <button id="filterCategory"
+                    class="bg-opacity-90 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:bg-blue-600">
+                    Filter by Date
+                </button> -->
+                <div id="categoryDropdown" onmouseover="showDropdown2()"
+                    class="absolute hidden mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg">
+                    <a href="#" onclick="showCategory('All')"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">All</a>
+                    <a href="#" onclick="showCategory('Rent')" onmouseout="hideDropdown2()"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Rent</a>
+                    <a href="#" onclick="showCategory('Groceries')"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Groceries</a>
+                    <a href="#" onclick="showCategory('Utilities')"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Utilities</a>
+                    <a href="#" onclick="showCategory('Entertainment')"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Entertainment</a>
+                    <a href="#" onclick="showCategory('Miscellanous')"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Miscellanous</a>
+                </div>
+
+
+
+                <div class="relative inline-block text-left">
+                    <button id="filterDate"
+                        class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:bg-blue-600">
+                        Filter by Date
+                    </button>
+                    <div id="dropdown-content"
+                        class="dropdown-content absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg py-2">
+                        <button class="close text-gray-600">&times;</button>
+                        <div class="px-4 py-2">
+                            <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
+                            <input type="date" id="startDate"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-2 py-1">
+                        </div>
+                        <div class="px-4 py-2">
+                            <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
+                            <input type="date" id="endDate"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-2 py-1">
+                        </div>
+                        <div class="px-4 py-2">
+                            <button id="applyFilter"
+                                class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:bg-blue-600">
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="flex space-x-2">
+                <button id="export-csv" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Export to
+                    CSV</button>
+                <button id="export-pdf" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Export to
+                    PDF</button>
+            </div>
+        </div>
+
+        <!-- The Modal -->
+        <div id="myModal" class="z-50 fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white rounded-lg overflow-hidden  w-1/3">
+                <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-lg font-semibold">Add Entry</h2>
+                    <button class="close text-gray-600">&times;</button>
+                </div>
+                <form id="popupForm" class="p-4">
+                    <input type="hidden" id="transactionId" name="transactionId">
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700">Name:</label>
+                        <input type="text" id="name" name="name"
+                            class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="type" class="block text-gray-700">Type:</label>
+                        <select id="type" name="type"
+                            class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                            <option value="true">Income</option>
+                            <option value="false">Expense</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="date" class="block text-gray-700">Date:</label>
+                        <input type="date" id="date" name="date"
+                            class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="amount" class="block text-gray-700">Amount:</label>
+                        <input type="number" id="amount" name="amount"
+                            class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="category" class="block text-gray-700">Category:</label>
+                        <input type="text" id="category" name="category"
+                            class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button"
+                            class="close bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <section class="bg-white p-6 rounded-b-lg ">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table id="dataTable" class=" w-full text-sm text-left rtl:text-right text-gray-600 dark:text-gray-400">
+                    <thead class="text-xs  uppercase  bg-gray-700 text-gray-400">
+                        <tr>
+
+                            <th scope="col" class="px-6 py-3">
+                                Name
+                            </th>
+
+                            <th scope="col" class="px-6 py-3">
+                                Date
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Amount
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Category
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700" id="data">
+                        <!-- data will be entered here. -->
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+
+    <script src="history.js"></script>
+    <script src="navbar.js"></script>
+
+</body>
+
+</html>

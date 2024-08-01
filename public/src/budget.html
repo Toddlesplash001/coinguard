@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/078e2f97cb.js" crossorigin="anonymous"></script>
+    <style>
+        #expenseChart {
+            width: 100%;
+            max-width: 400px;
+            max-height: 400px;
+        }
+
+        #myChart {
+            width: 100%;
+            max-width: 550px;
+            max-height: 500px;
+        }
+
+        .large-button {
+            padding: 14px 24px;
+            font-size: 20px;
+        }
+
+        .table-row {
+            font-size: 14px;
+            padding: 8px;
+        }
+
+        #progressChart {
+            transition: all 1s ease-in-out;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-gray-900 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="./budget.html">
+                <h1 class="text-2xl font-bold">Coinguard</h1>
+            </a>
+            <div id="navbar"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-6">
+        <!-- Heading -->
+        <section class="bg-white p-6 rounded-t-lg shadow-md text-center">
+            <button id="openModalBtn"
+                class="large-button px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Add
+                Transaction</button>
+        </section>
+        <!-- Progress Tracker -->
+        <section class=" p-6 absolute right-0 top-0 mt-16 mr-24">
+            <div class="flex justify-end items-center">
+                <canvas id="progressChart" width="150" height="150"></canvas>
+            </div>
+            <p class="text-gray-700 text-xs text-center mt-2 font-semibold mr-3">You have spent <span
+                    id="progress-text">0%</span> of your budget</p>
+        </section>
+
+
+        <!-- Pie Chart Section -->
+        <section class="bg-white p-6 shadow-md">
+            <h2 class="text-xl font-semibold">Expense Distribution</h2>
+            <div class="flex justify-around items-start space-x-4">
+
+
+                <div class="flex flex-col items-center">
+                    <div class="mb-4 mt-5">
+
+                        <div class="flex flex-wrap justify-center">
+                            <div class="flex items-center mr-4">
+                                <span class="w-4 h-4 bg-red-500 inline-block mr-2"></span>
+                                <span>Rent</span>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <span class="w-4 h-4 bg-green-500 inline-block mr-2"></span>
+                                <span>Groceries</span>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <span class="w-4 h-4 bg-blue-500 inline-block mr-2"></span>
+                                <span>Utilities</span>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <span class="w-4 h-4 bg-purple-500 inline-block mr-2"></span>
+                                <span>Entertainment</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-4 h-4 bg-yellow-500 inline-block mr-2"></span>
+                                <span>Miscellaneous</span>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="expenseChart" class="w-96 h-96 cursor-pointer"></canvas>
+                </div>
+                <canvas id="myChart" class="max-w-sm"></canvas>
+            </div>
+            <hr class="opacity-40 mt-6">
+        </section>
+        <!-- Add Transaction Button (Moved to Heading Section) -->
+        <section>
+            <!-- The Modal -->
+            <div id="myModal"
+                class="z-50 fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+                <div class="bg-white rounded-lg overflow-hidden shadow-xl w-1/3">
+                    <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold">Add Entry</h2>
+                        <button class="close text-gray-600">&times;</button>
+                    </div>
+                    <form id="popupForm" class="p-4">
+                        <input type="hidden" id="transactionId" name="id">
+                        <div class="mb-4">
+                            <label for="name" class="block text-gray-700">Name:</label>
+                            <input type="text" id="name" name="name"
+                                class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="date" class="block text-gray-700">Date:</label>
+                            <input type="date" id="date" name="date"
+                                class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="category" class="block text-gray-700">Category:</label>
+                            <select id="category" name="category"
+                                class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required>
+                                <option value="Rent">Rent</option>
+                                <option value="Groceries">Groceries</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Misc">Misc</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="amount" class="block text-gray-700">Amount:</label>
+                            <input type="number" id="amount" name="amount"
+                                class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="button"
+                                class="close bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </section>
+        <!-- Transactions table -->
+        <section class="bg-white p-6 rounded-b-lg shadow-md">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table id="dataTable" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs  uppercase  bg-gray-700 text-gray-400">
+                        <tr>
+
+                            <th scope="col" class="px-6 py-3">
+                                Name
+                            </th>
+
+                            <th scope="col" class="px-6 py-3">
+                                Date
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Amount
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Category
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700" id="data">
+                        <!-- data will be entered here. -->
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white p-4 mt-6 absolute left-0 right-0">
+        <div class="container mx-auto text-center">
+            &copy; 2024 Coinguard. All rights reserved.
+        </div>
+    </footer>
+
+
+    <script src="budget.js"> </script>
+    <script src="navbar.js"></script>
+</body>
+
+</html>

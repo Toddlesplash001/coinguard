@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coinguard - Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
+    <script src="https://kit.fontawesome.com/078e2f97cb.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <style>
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-gray-900 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="./budget.html">
+                <h1 class="text-2xl font-bold">Coinguard</h1>
+            </a>
+            <div id="navbar"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-6">
+        <section class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-5xl font-bold mb-4">Profile</h2>
+            <div class="flex flex-col md:flex-row md:space-x-8">
+                <div class="flex-grow">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-xl font-bold mb-2 text-gray-700">Name</label>
+                            <p class="border border-gray-300 rounded-md p-3 w-full display-field space-x-4"
+                                id="nameShown">N/A</p>
+                            <input type="text" id="name" name="name" value="N/A"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-md edit-field hidden">
+                        </div>
+
+                        <div>
+                            <label for="country" class="block text-xl font-bold mb-2 text-gray-700">Country</label>
+                            <p class="border border-gray-300 rounded-md p-3 w-full display-field" id="countryShown">N/A
+                            </p>
+                            <input type="text" id="country" name="country" value="N/A"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-md edit-field hidden">
+                        </div>
+
+                        <div>
+                            <label for="gender" class="block text-xl font-bold mb-2 text-gray-700">Gender</label>
+                            <p class="border border-gray-300 rounded-md p-3 w-full display-field" id="genderShown">N/A
+                            </p>
+                            <select id="gender" name="gender"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-md edit-field hidden">
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                                <option>Prefer not to say</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-xl font-bold mb-2 text-gray-700">Email</label>
+                            <p class="border border-gray-300 rounded-md p-3 w-full display-field" id="emailShown">N/A
+                            </p>
+                            <input type="email" id="email" name="email" value="N/A"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-md edit-field hidden">
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-xl font-bold mb-2 text-gray-700">Phone</label>
+                            <p class="border border-gray-300 rounded-md p-3 w-full display-field" id="contactShown"></p>
+                            <input type="tel" id="phone" name="phone" value="N/A"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-md edit-field hidden">
+                        </div>
+
+                        <div>
+                            <label for="budget" class="block text-xl font-bold mb-2 text-gray-700">Budget</label>
+                            <p class="border border-gray-300 rounded-md p-3 w-full display-field" id="budgetShown"></p>
+                            <input type="number" id="budget" name="budget"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-md edit-field hidden">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 text-right">
+                <button id="edit-button" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    onclick="toggleEdit()">Edit</button>
+                <button id="save-button" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 hidden"
+                    onclick="saveProfile()">Save</button>
+                <button id="cancel-button" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 hidden"
+                    onclick="cancelEdit()">Cancel</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white p-4 mt-6 absolute bottom-0 left-0 right-0">
+        <div class="container mx-auto text-center">
+            &copy; 2024 Coinguard. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="profile.js"></script>
+    <script src="navbar.js"></script>
+</body>
+
+</html>
